@@ -1,0 +1,22 @@
+diff --git a/linkedin_3.2.0.class.php b/linkedin_3.2.0.class.php
+index 23a38d6..a165b53 100755
+--- a/linkedin_3.2.0.class.php
++++ b/linkedin_3.2.0.class.php
+@@ -1848,11 +1848,15 @@ class LinkedIn {
+ 	 * @return arr
+ 	 *    The Linkedin OAuth/http response, in array format.      	 
+ 	 */
+-	public function retrieveTokenRequest() {
++	public function retrieveTokenRequest($scope='') {
+     $parameters = array(
+       'oauth_callback' => $this->getCallbackUrl()
+     );
+-    $response = $this->fetch(self::_METHOD_TOKENS, self::_URL_REQUEST, NULL, $parameters);
++    if (!empty($scope)) {
++    	$response = $this->fetch(self::_METHOD_TOKENS, self::_URL_REQUEST.'?scope='.$scope, NULL, $parameters);
++    } else {
++    	$response = $this->fetch(self::_METHOD_TOKENS, self::_URL_REQUEST, NULL, $parameters);
++	}
+     parse_str($response['linkedin'], $response['linkedin']);
+     
+     /**
