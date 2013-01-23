@@ -1,0 +1,16 @@
+{
+    "name": "twisted/fancycv",
+    "description": "Generates a fancy CV from your LinkedIn",
+    "require": {
+        "opauth/linkedin": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "authors": [
+        {
+            "name": "Yorick Terweijden",
+            "email": "terwey@gmail.com"
+        }
+    ]
+}
