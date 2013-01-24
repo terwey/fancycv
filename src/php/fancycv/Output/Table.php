@@ -3,7 +3,7 @@ namespace fancycv\Output;
 
 class Table extends Output
 {
-    private $_table;
+    protected $_table;
     public function __construct(array $tableContents) {
     	$this->_table = $tableContents;
     	return $this->table($tableContents);

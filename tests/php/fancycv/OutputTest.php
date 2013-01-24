@@ -39,7 +39,7 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 				'row2_Column2' // column2
 			)
 		);
-		var_dump($this->_output);
+		// var_dump($this->_output);
 		$table = $this->_output->table($tableContents);
 		$this->assertInstanceOf('fancycv\Output\Table', $table);
 	}

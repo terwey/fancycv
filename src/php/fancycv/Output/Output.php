@@ -3,8 +3,8 @@ namespace fancycv\Output;
 
 class Output
 {
-	private $_formatObject;
-    private $_table;
+	protected $_formatObject;
+    protected $_table;
     public function __construct($format='tex') {
     	$this->_formatObject = new Format($format);
     }
