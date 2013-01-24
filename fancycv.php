@@ -2,6 +2,7 @@
 <?php
 DEFINE('CONFIG_FILE', __DIR__.'/config.yml');
 DEFINE('JSON_FILE', __DIR__.'/linkedin.json');
+DEFINE('FORMATTERS', __DIR__.'/src/yml/fancycv/formatters/');
 require_once('vendor/autoload.php');
 use fancycv\InitCommand;
 use fancycv\AuthCommand;

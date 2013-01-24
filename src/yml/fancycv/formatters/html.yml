@@ -1,0 +1,6 @@
+tableOpen: '<table>'
+tableClose: '</table>'
+rowOpen: '<tr>'
+rowClose: '</tr>'
+columnOpen: '<td>'
+columnClose: '</td>'
