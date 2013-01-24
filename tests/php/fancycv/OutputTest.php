@@ -8,7 +8,6 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		$format = 'tex';
 		$this->_output = new Output($format);
-		$this->assertEquals($format, $this->_output->Format());
 	}
 
 	protected function tearDown() {
@@ -19,6 +18,12 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('fancycv\Output\Output', $this->_output);
 	}
 
+	/**
+	* @depends testNewOutput
+	**/
+	function testNewOutputFormat() {
+		$this->assertInstanceOf('fancycv\Output\Format', $this->_output->getFormat());
+	}
 
 	/**
 	* @depends testNewOutput
@@ -34,22 +39,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 				'row2_Column2' // column2
 			)
 		);
-		$table = new Table($tableContents);
+		var_dump($this->_output);
+		$table = $this->_output->table($tableContents);
 		$this->assertInstanceOf('fancycv\Output\Table', $table);
-		return $table;
-	}
-
-	/**
-	* @depends testNewOutputTable
-	**/
-	function testOutputTableRow($table) {
-		$table->row();
-	}
-
-	/**
-	* @depends testTableOutput
-	**/
-	function testTableRowOutput($table) {
-		$table = $this->output->row();
 	}
 }
