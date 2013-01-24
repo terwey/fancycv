@@ -1,6 +1,5 @@
 <?php
-namespace fancycv\Output\Table;
-use Output;
+namespace fancycv\Output;
 
 class Table extends Output
 {
