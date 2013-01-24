@@ -2,3 +2,4 @@ config.yml
 vendor/
 .DS_Store
 *.old
+composer.lock
