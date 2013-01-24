@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class InitCommand extends Command
 {
@@ -46,8 +47,8 @@ class InitCommand extends Command
         $newConfig['appKey'] = $dialog->ask($output, 'Enter your Application key: ');
         $newConfig['appSecret'] = $dialog->ask($output, 'Enter your Application Secret key: ');
 
-        $fileSaved = file_put_contents(CONFIG_FILE, yaml_emit($newConfig));
-        if ($fileSaved === FALSE) { 
+        $fileSaved = file_put_contents(CONFIG_FILE, Yaml::dump($newConfig));
+        if ($fileSaved === FALSE) {
             $output->writeln('<error>Something went wrong writing the file</error>');
         } else {
             $output->writeln('Your config has now been updated. You can now use the auth command.');

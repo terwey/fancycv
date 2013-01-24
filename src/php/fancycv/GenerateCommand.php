@@ -15,63 +15,57 @@ class GenerateCommand extends Command
         $this
             ->setName('generate')
             ->setDescription('Generates your CV')
+            ->addOption(
+                'positions',
+                null,
+                InputOption::VALUE_NONE,
+                'Process your positions'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!file_exists(CONFIG_FILE)) {
-            $output->writeln('The config file is not yet present. Executing the auth and then init first.');
-            $command = $this->getApplication()->find('auth');
+        if (!file_exists(JSON_FILE)) {
+            $output->writeln('The LinkedIn data is not downloaded. Executing the fetch command first.');
+            $command = $this->getApplication()->find('fetch');
             $returnCode = $command->run($input, $output);
         } else {
-            $this->config = yaml_parse_file(CONFIG_FILE);
-            $this->config['callbackUrl'] = NULL;
-
-            $this->linkedin = new \LinkedIn($this->config);
-            $this->linkedin->setTokenAccess($this->config);
+            $decode = json_decode(file_get_contents(JSON_FILE), TRUE);
+            // print_r($decode['positions']['values']);
+            $positionsTex = $this->positions($decode['positions']['values']);
+            print '\documentclass{article}
+\usepackage{tabularx,colortbl}
+\newcommand{\gray}{\rowcolor[gray]{.90}}
+\begin{document}
+\begin{center}'."\n";
+            print $positionsTex;
+            print '\end{center}
+\end{document}';
         }
+    }
 
-        $infoWeWant = array(
-            // basic profile
-            'first-name',
-            'last-name',
-            'maiden-name',
-            'formatted-name',
-
-            'location:(country:(code))',
-            'industry',
-
-
-            'headline',
-            'summary',
-            'specialties',
-            'positions',
-
-            'skills'
-        );
-
-
-        $profile = $this->linkedin->profile('~:('.implode(',', $infoWeWant).')?format=json');
-        print_r($profile['linkedin']);
-
-        // $dialog = $this->getHelperSet()->get('dialog');
-        // if (!file_exists(CONFIG_FILE)) {
-        //     $this->getKeys($input, $output);
-        // } else {
-        //     $answers = array('yes', 'no');
-        //     // ask and validate the answer
-        //     $answer = $dialog->askAndValidate($output, 'A config.yml is already present. Do you want to overwrite? (default to no): ', function ($answer) use ($answers) {
-        //         if (!in_array($answer, array_values($answers))) {
-        //             throw new \InvalidArgumentException(sprintf('Answer "%s" is invalid.', $answer));
-        //         }
-
-        //         return $answer;
-        //     }, false, 'no');
-        //     if ($answer == 'yes') {
-        //         $this->getKeys($input, $output);
-        //     }
-        // }
+    protected function positions(array $positions) {
+        $tex = '\section{Positions}'."\n";
+        foreach ($positions as $position) {
+            $tex .= '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'."\n";
+            // period
+            $tex .= '\gray Period & '.date('F Y', mktime(0,0,0,$position['startDate']['month'],0,$position['startDate']['year'])).' --- ';
+            if ($position['isCurrent'] == 1) {
+                $tex .= 'Present\\\\'."\n";
+            } else {
+                $tex .= date('F Y', mktime(0,0,0,$position['endDate']['month'],0,$position['endDate']['year'])).'\\\\'."\n";
+            }
+            // employer
+            $tex .= '\gray Employer & '. $position['company']['name'] .'\\\\'."\n";
+            // job title
+            $tex .= '\gray Job Title & '. $position['title'] .'\\\\'."\n";
+            // summary
+            $tex .= '\gray Summary & '. preg_replace("/[\\n\\r]+/", "\n\n", $position['summary']).'\\\\'."\n";
+            $tex .= '\end{tabularx}'."\n";
+            $tex .= '\vspace{12pt}'."\n\n";
+        }
+        return $tex;
     }
 }
 

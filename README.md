@@ -1,17 +1,18 @@
-Get OAuth.php from http://oauth.googlecode.com/svn/code/php/OAuth.php
-Get simple-linkedinphp from http://code.google.com/p/simple-linkedinphp/downloads/list
-Place the files in a dir named vendor like this:
-vendor/
- - OAuth.php
- - linkedin_3.2.0.class.php
+# FancyCV
+## Setup
+All dependencies can be installed via Composer:
 
-! IMPORTANT
-In the version I was using you could not set the scope. I've included a patch file you can
-use to patch the lib to get a scope. This is REQUIRED for the generator to work!
+    php composer.phar install
 
-Getting started:
-1) Request your Developer API on Linkedin: https://developer.linkedin.com/
-2) Rename config.yml.dist to config.yml and modify the values in the file to reflect your
+##Getting started:
+1. Request your Developer API on Linkedin: https://developer.linkedin.com/
+2. Rename config.yml.dist to config.yml and modify the values in the file to reflect your
    received tokens.
-3) $ php runMeFirst.php
-   and follow the steps.
+
+Usage:
+```
+$ chmod +x fancycv.php
+$ ./fancycv.php init
+$ ./fancycv.php auth
+$ ./fancycv.php generate
+```
