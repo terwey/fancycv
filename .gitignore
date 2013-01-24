@@ -3,7 +3,9 @@ vendor/
 .DS_Store
 *.old
 composer.lock
+linkedin.json
+phpunit.xml
+._phpunit.xml.dist
 *.pdf
 *.tex
 *.aux
-linkedin.json
