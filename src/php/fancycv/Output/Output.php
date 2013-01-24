@@ -4,7 +4,7 @@ namespace fancycv\Output;
 class Output
 {
 	protected $_formatObject;
-    protected $_table;
+    protected $_tableObject;
     public function __construct($format='tex') {
     	$this->_formatObject = new Format($format);
     }
@@ -18,7 +18,8 @@ class Output
     }
 
     public function table($tableContents) {
-        return $this->_table = new Table($tableContents);
+        $this->_tableObject = new Table($tableContents);
+        return $this->_tableObject->table();
     }
 }
 
