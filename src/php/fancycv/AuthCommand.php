@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class AuthCommand extends Command
 {
@@ -25,7 +26,7 @@ class AuthCommand extends Command
             $command = $this->getApplication()->find('init');
             $returnCode = $command->run($input, $output);
         } else {
-            $this->config = yaml_parse_file(CONFIG_FILE);
+            $this->config = Yaml::parse(CONFIG_FILE);
             $this->config['callbackUrl'] = NULL;
 
             $this->linkedin = new \LinkedIn($this->config);
@@ -37,7 +38,7 @@ class AuthCommand extends Command
 
     protected function getToken(InputInterface $input, OutputInterface $output) {
         $dialog = $this->getHelperSet()->get('dialog');
-        
+
         $tokenResponse = $this->linkedin->retrieveTokenRequest('r_fullprofile');
         if($tokenResponse['success'] === TRUE) {
             $url = \LINKEDIN::_URL_AUTH . $tokenResponse['linkedin']['oauth_token'];
@@ -48,7 +49,7 @@ class AuthCommand extends Command
                 }
                 return $pin;
             });
-            
+
             $returnValues = array(
                 'oauth_token' => $tokenResponse['linkedin']['oauth_token'],
                 'oauth_token_secret' => $tokenResponse['linkedin']['oauth_token_secret'],
@@ -69,8 +70,8 @@ class AuthCommand extends Command
             $newConfig['oauth_token_secret'] = $accessResponse['linkedin']['oauth_token_secret'];
             unset($newConfig['callbackUrl']);
 
-            $fileSaved = file_put_contents(CONFIG_FILE, yaml_emit($newConfig));
-            if ($fileSaved === FALSE) { 
+            $fileSaved = file_put_contents(CONFIG_FILE, Yaml::dump($newConfig));
+            if ($fileSaved === FALSE) {
                 $output->writeln('<error>Something went wrong writing the file</error>');
             } else {
                 $output->writeln('Your config has now been updated. You can now use the generate command.');
