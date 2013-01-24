@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class FetchCommand extends Command
 {
@@ -25,7 +26,7 @@ class FetchCommand extends Command
             $command = $this->getApplication()->find('auth');
             $returnCode = $command->run($input, $output);
         } else {
-            $this->config = yaml_parse_file(CONFIG_FILE);
+            $this->config = Yaml::parse(CONFIG_FILE);
             $this->config['callbackUrl'] = NULL;
 
             $this->linkedin = new \LinkedIn($this->config);
