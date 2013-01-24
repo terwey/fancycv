@@ -3,3 +3,7 @@ vendor/
 .DS_Store
 *.old
 composer.lock
+*.pdf
+*.tex
+*.aux
+linkedin.json
