@@ -1,0 +1,6 @@
+tableOpen: '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'
+tableClose: '\end{tabularx}'
+rowOpen: '\gray '
+rowClose: '\\'
+columnOpen: ' '
+columnClose: '&'

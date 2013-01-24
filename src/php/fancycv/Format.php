@@ -1,7 +1,8 @@
 <?php
-namespace fancycv\Output;
+namespace fancycv;
+use Symfony\Component\Yaml\Yaml;
 
-class Format extends Output
+class Format
 {
     private $_formatName;
 
@@ -16,6 +17,13 @@ class Format extends Output
 
     public function __construct($format) {
     	$this->_formatName = $format;
+        $formatter = Yaml::parse(FORMATTERS.$format.'.yml');
+        $this->_tableOpen = $formatter['tableOpen']."\n";
+        $this->_tableClose = $formatter['tableClose']."\n";
+        $this->_rowOpen = $formatter['rowOpen']."\n";
+        $this->_rowClose = $formatter['rowClose']."\n";
+        $this->_columnOpen = $formatter['columnOpen']."\n";
+        $this->_columnClose = $formatter['columnClose']."\n";
     }
 
     public function getFormatName() {

@@ -1,33 +1,23 @@
 <?php
 
-namespace fancycv\Output;
+namespace fancycv;
 
 class OutputTest extends \PHPUnit_Framework_TestCase {
-	private $_output;
+	private $_formatObject;
 
 	protected function setUp() {
 		$format = 'tex';
-		$this->_output = new Output($format);
+		$this->_formatObject = new Format($format);
 	}
 
 	protected function tearDown() {
-		unset($this->_output);
+		unset($this->_formatObject);
 	}
 
-	function testNewOutput() {
-		$this->assertInstanceOf('fancycv\Output\Output', $this->_output);
+	function testNewFormatInstance() {
+		$this->assertInstanceOf('fancycv\Format', $this->_formatObject);
 	}
 
-	/**
-	* @depends testNewOutput
-	**/
-	function testNewOutputFormat() {
-		$this->assertInstanceOf('fancycv\Output\Format', $this->_output->getFormat());
-	}
-
-	/**
-	* @depends testNewOutput
-	**/
 	function testNewOutputTable() {
 		$tableContents = array(
 			array( // row 1
@@ -39,8 +29,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 				'row2_Column2' // column2
 			)
 		);
-		// var_dump($this->_output);
-		$table = $this->_output->table($tableContents);
-		$this->assertInstanceOf('fancycv\Output\Table', $table);
+		$table = new Table($this->_formatObject, $tableContents);
+		$this->assertInstanceOf('fancycv\Table', $table);
+		print $table->table();
 	}
 }
