@@ -23,13 +23,13 @@ class Format
             throw new Exception('Format: '. $format .'does not exist!');
         } else {
             $formatter = Yaml::parse(FORMATTERS.$format.'.yml');
-            $this->_tableOpen = $formatter['tableOpen']."\n";
-            $this->_tableClose = $formatter['tableClose']."\n";
-            $this->_rowOpen = $formatter['rowOpen']."\n";
-            $this->_rowClose = $formatter['rowClose']."\n";
-            $this->_columnOpen = $formatter['columnOpen']."\n";
-            $this->_columnClose = $formatter['columnClose']."\n";
-            $this->_columnJoin = $formatter['columnJoin']."\n";
+            $this->_tableOpen = $formatter['tableOpen'];
+            $this->_tableClose = $formatter['tableClose'];
+            $this->_rowOpen = $formatter['rowOpen'];
+            $this->_rowClose = $formatter['rowClose'];
+            $this->_columnOpen = $formatter['columnOpen'];
+            $this->_columnClose = $formatter['columnClose'];
+            $this->_columnJoin = $formatter['columnJoin'];
             $this->_join = $formatter['join'];
         }
     }
@@ -38,32 +38,39 @@ class Format
         return $this->_formatName;
     }
 
-    public function tableOpen() { 
-        return $this->_tableOpen; 
+    public function tableOpen() {
+        $newline = ($this->_tableOpen['newline']) ? "\n" : '';
+        return $this->_tableOpen['code'].$newline;
     }
 
     public function tableClose() {
-        return $this->_tableClose;
+        $newline = ($this->_tableClose['newline']) ? "\n" : '';
+        return $this->_tableClose['code'].$newline;
     }
 
-    public function rowOpen() { 
-        return $this->_rowOpen; 
+    public function rowOpen() {
+        $newline = ($this->_rowOpen['newline']) ? "\n" : '';
+        return $this->_rowOpen['code'].$newline;
     }
 
-    public function rowClose() { 
-        return $this->_rowClose;
+    public function rowClose() {
+        $newline = ($this->_rowClose['newline']) ? "\n" : '';
+        return $this->_rowClose['code'].$newline;
     }
 
     public function columnOpen() { 
-        return $this->_columnOpen;
+        $newline = ($this->_columnOpen['newline']) ? "\n" : '';
+        return $this->_columnOpen['code'].$newline;
     }
 
-    public function columnClose() { 
-        return $this->_columnClose;
+    public function columnClose() {
+        $newline = ($this->_columnClose['newline']) ? "\n" : '';
+        return $this->_columnClose['code'].$newline;
     }
 
     public function columnJoin() {
-        return $this->_columnJoin;
+        $newline = ($this->_columnJoin['newline']) ? "\n" : '';
+        return $this->_columnJoin['code'].$newline;
     }
 
     public function join() {

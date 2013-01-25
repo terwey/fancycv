@@ -21,11 +21,12 @@ class Table
 
     private function row(array $row) {
         $amountColumns = count($row);
-        $count = 0;
+        $count = 1;
     	$output = $this->_formatObject->rowOpen();
     	foreach ($row as $columns => $column) {
             $last = ($count == $amountColumns) ? TRUE : FALSE;
     		$output .= $this->column($column, $last);
+            $count++;
     	}
     	$output .= $this->_formatObject->rowClose();
     	return $output;

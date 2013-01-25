@@ -1,8 +1,22 @@
-tableOpen: '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'
-tableClose: '\end{tabularx}'
-rowOpen: '\gray '
-rowClose: '\\'
-columnOpen: ''
-columnClose: ''
-columnJoin: ' & '
+tableOpen:
+ code: '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'
+ newline: TRUE
+tableClose: 
+ code: '\end{tabularx}'
+ newline: TRUE
+rowOpen: 
+ code: '\gray '
+ newline: FALSE
+rowClose: 
+ code: '\\'
+ newline: TRUE
+columnOpen:
+ code: ''
+ newline: FALSE
+columnClose: 
+ code: ''
+ newline: FALSE
+columnJoin: 
+ code: ' & '
+ newline: FALSE
 join: TRUE
