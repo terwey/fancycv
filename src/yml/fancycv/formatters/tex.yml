@@ -1,22 +1,28 @@
-tableOpen:
- code: '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'
- newline: TRUE
-tableClose: 
- code: '\end{tabularx}'
- newline: TRUE
-rowOpen: 
- code: '\gray '
- newline: FALSE
-rowClose: 
- code: '\\'
- newline: TRUE
-columnOpen:
- code: ''
- newline: FALSE
-columnClose: 
- code: ''
- newline: FALSE
-columnJoin: 
- code: ' & '
- newline: FALSE
+# document header
+documentOpen: |
+ \documentclass{article}
+ \usepackage{tabularx,colortbl}
+ \newcommand{\gray}{\rowcolor[gray]{.90}}
+ \begin{document}
+ \begin{center}
+documentClose: |
+ \end{center}
+ \end{document}
+
+# section
+sectionOpen: |
+ \section{
+sectionClose: }
+
+# table format
+tableOpen: |
+ \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+tableClose: '\end{tabularx}'
+rowOpen: '\gray '
+rowClose: |
+ \\
+ 
+columnOpen: ''
+columnClose: ''
+columnJoin: ' & '
 join: TRUE

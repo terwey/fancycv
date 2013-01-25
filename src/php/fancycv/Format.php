@@ -38,39 +38,32 @@ class Format
         return $this->_formatName;
     }
 
-    public function tableOpen() {
-        $newline = ($this->_tableOpen['newline']) ? "\n" : '';
-        return $this->_tableOpen['code'].$newline;
+    public function tableOpen() { 
+        return $this->_tableOpen; 
     }
 
     public function tableClose() {
-        $newline = ($this->_tableClose['newline']) ? "\n" : '';
-        return $this->_tableClose['code'].$newline;
+        return $this->_tableClose;
     }
 
-    public function rowOpen() {
-        $newline = ($this->_rowOpen['newline']) ? "\n" : '';
-        return $this->_rowOpen['code'].$newline;
+    public function rowOpen() { 
+        return $this->_rowOpen; 
     }
 
-    public function rowClose() {
-        $newline = ($this->_rowClose['newline']) ? "\n" : '';
-        return $this->_rowClose['code'].$newline;
+    public function rowClose() { 
+        return $this->_rowClose;
     }
 
     public function columnOpen() { 
-        $newline = ($this->_columnOpen['newline']) ? "\n" : '';
-        return $this->_columnOpen['code'].$newline;
+        return $this->_columnOpen;
     }
 
-    public function columnClose() {
-        $newline = ($this->_columnClose['newline']) ? "\n" : '';
-        return $this->_columnClose['code'].$newline;
+    public function columnClose() { 
+        return $this->_columnClose;
     }
 
     public function columnJoin() {
-        $newline = ($this->_columnJoin['newline']) ? "\n" : '';
-        return $this->_columnJoin['code'].$newline;
+        return $this->_columnJoin;
     }
 
     public function join() {
