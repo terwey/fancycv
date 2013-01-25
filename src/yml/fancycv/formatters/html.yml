@@ -1,3 +1,19 @@
+#document header
+documentOpen: |
+ <html>
+ <head>
+ <title>Generated CV</title>
+ </head>
+ <body>
+
+documentClose: |
+ </body>
+ </html>
+
+#section
+sectionOpen: <h1>
+sectionClose: </h1>
+
 tableOpen: |
  <table>
 tableClose: |
