@@ -4,3 +4,5 @@ rowOpen: '<tr>'
 rowClose: '</tr>'
 columnOpen: '<td>'
 columnClose: '</td>'
+columnJoin: ''
+join: FALSE

@@ -14,16 +14,24 @@ class Format
     private $_rowClose;
     private $_columnOpen;
     private $_columnClose;
+    private $_columnJoin;
+    private $_join;
 
     public function __construct($format) {
     	$this->_formatName = $format;
-        $formatter = Yaml::parse(FORMATTERS.$format.'.yml');
-        $this->_tableOpen = $formatter['tableOpen']."\n";
-        $this->_tableClose = $formatter['tableClose']."\n";
-        $this->_rowOpen = $formatter['rowOpen']."\n";
-        $this->_rowClose = $formatter['rowClose']."\n";
-        $this->_columnOpen = $formatter['columnOpen']."\n";
-        $this->_columnClose = $formatter['columnClose']."\n";
+        if (!file_exists(FORMATTERS.$format.'.yml')) {
+            throw new Exception('Format: '. $format .'does not exist!');
+        } else {
+            $formatter = Yaml::parse(FORMATTERS.$format.'.yml');
+            $this->_tableOpen = $formatter['tableOpen']."\n";
+            $this->_tableClose = $formatter['tableClose']."\n";
+            $this->_rowOpen = $formatter['rowOpen']."\n";
+            $this->_rowClose = $formatter['rowClose']."\n";
+            $this->_columnOpen = $formatter['columnOpen']."\n";
+            $this->_columnClose = $formatter['columnClose']."\n";
+            $this->_columnJoin = $formatter['columnJoin']."\n";
+            $this->_join = $formatter['join'];
+        }
     }
 
     public function getFormatName() {
@@ -54,6 +62,13 @@ class Format
         return $this->_columnClose;
     }
 
+    public function columnJoin() {
+        return $this->_columnJoin;
+    }
+
+    public function join() {
+        return $this->_join;
+    }
 }
 
 ?>
