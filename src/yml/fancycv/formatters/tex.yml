@@ -5,24 +5,27 @@ documentOpen: |
  \newcommand{\gray}{\rowcolor[gray]{.90}}
  \begin{document}
  \begin{center}
+
 documentClose: |
  \end{center}
  \end{document}
 
 # section
-sectionOpen: |
- \section{
-sectionClose: }
-
+sectionOpen: '\section{'
+sectionClose: |
+ }
+  
 # table format
 tableOpen: |
  \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
-tableClose: '\end{tabularx}'
+tableClose: |
+ \end{tabularx}
+ \vspace{12pt}
+  
 rowOpen: '\gray '
 rowClose: |
  \\
- 
-columnOpen: ''
-columnClose: ''
+columnOpen: 
+columnClose: 
 columnJoin: ' & '
 join: TRUE

@@ -32,38 +32,36 @@ class GenerateCommand extends Command
             $returnCode = $command->run($input, $output);
         } else {
             $decode = json_decode(file_get_contents(JSON_FILE), TRUE);
+            $format = new Format('tex');
             // print_r($decode['positions']['values']);
-            $positionsTex = $this->positions($decode['positions']['values']);
-            print '\documentclass{article}
-\usepackage{tabularx,colortbl}
-\newcommand{\gray}{\rowcolor[gray]{.90}}
-\begin{document}
-\begin{center}'."\n";
+            $positionsTex = $this->positions($format, $decode['positions']['values']);
+            print $format->documentOpen();
             print $positionsTex;
-            print '\end{center}
-\end{document}';
+            print $format->documentClose();
         }
     }
 
-    protected function positions(array $positions) {
-        $tex = '\section{Positions}'."\n";
+    protected function positions(Format $format, array $positions) {
+        $tex = $format->sectionTitle('Positions');
         foreach ($positions as $position) {
-            $tex .= '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'."\n";
-            // period
-            $tex .= '\gray Period & '.date('F Y', mktime(0,0,0,$position['startDate']['month'],0,$position['startDate']['year'])).' --- ';
-            if ($position['isCurrent'] == 1) {
-                $tex .= 'Present\\\\'."\n";
-            } else {
-                $tex .= date('F Y', mktime(0,0,0,$position['endDate']['month'],0,$position['endDate']['year'])).'\\\\'."\n";
-            }
-            // employer
-            $tex .= '\gray Employer & '. $position['company']['name'] .'\\\\'."\n";
-            // job title
-            $tex .= '\gray Job Title & '. $position['title'] .'\\\\'."\n";
-            // summary
-            $tex .= '\gray Summary & '. preg_replace("/[\\n\\r]+/", "\n\n", $position['summary']).'\\\\'."\n";
-            $tex .= '\end{tabularx}'."\n";
-            $tex .= '\vspace{12pt}'."\n\n";
+            $period = date('F Y', mktime(0,0,0,$position['startDate']['month'],0,$position['startDate']['year'])).' --- ';
+            $period .= ($position['isCurrent']) ? 'Present' : date('F Y', mktime(0,0,0,$position['endDate']['month'],0,$position['endDate']['year']));
+            $tableContents = array(
+                array(
+                    'Period', $period
+                ),
+                array(
+                    'Employer', $position['company']['name']
+                ),
+                array(
+                    'Job Title', $position['title']
+                ),
+                array(
+                    'Summary', preg_replace("/[\\n\\r]+/", "\n\n", $position['summary'])
+                )
+            );
+            $table = new Table($format, $tableContents);
+            $tex .= $table->table();
         }
         return $tex;
     }

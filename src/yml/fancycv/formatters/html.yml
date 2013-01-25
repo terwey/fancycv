@@ -1,8 +1,17 @@
-tableOpen: '<table>'
-tableClose: '</table>'
-rowOpen: '<tr>'
-rowClose: '</tr>'
-columnOpen: '<td>'
-columnClose: '</td>'
-columnJoin: ''
+tableOpen: |
+ <table>
+tableClose: |
+
+ </table>
+rowOpen: |
+ 	<tr>
+ 
+rowClose: |
+ 	</tr>
+ 
+columnOpen: '		<td>'
+columnClose: |
+ </td>
+ 
+columnJoin: 
 join: FALSE
