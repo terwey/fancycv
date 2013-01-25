@@ -1,6 +1,33 @@
-tableOpen: '<table>'
-tableClose: '</table>'
-rowOpen: '<tr>'
-rowClose: '</tr>'
-columnOpen: '<td>'
-columnClose: '</td>'
+#document header
+documentOpen: |
+ <html>
+ <head>
+ <title>Generated CV</title>
+ </head>
+ <body>
+
+documentClose: |
+ </body>
+ </html>
+
+#section
+sectionOpen: <h1>
+sectionClose: </h1>
+
+tableOpen: |
+ <table>
+tableClose: |
+
+ </table>
+rowOpen: |
+ 	<tr>
+ 
+rowClose: |
+ 	</tr>
+ 
+columnOpen: '		<td>'
+columnClose: |
+ </td>
+ 
+columnJoin: 
+join: FALSE

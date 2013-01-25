@@ -1,6 +1,31 @@
-tableOpen: '\begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}'
-tableClose: '\end{tabularx}'
+# document header
+documentOpen: |
+ \documentclass{article}
+ \usepackage{tabularx,colortbl}
+ \newcommand{\gray}{\rowcolor[gray]{.90}}
+ \begin{document}
+ \begin{center}
+
+documentClose: |
+ \end{center}
+ \end{document}
+
+# section
+sectionOpen: '\section{'
+sectionClose: |
+ }
+  
+# table format
+tableOpen: |
+ \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+tableClose: |
+ \end{tabularx}
+ \vspace{12pt}
+  
 rowOpen: '\gray '
-rowClose: '\\'
-columnOpen: ' '
-columnClose: '&'
+rowClose: |
+ \\
+columnOpen: 
+columnClose: 
+columnJoin: ' & '
+join: TRUE

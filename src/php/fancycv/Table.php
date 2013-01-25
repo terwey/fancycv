@@ -20,18 +20,27 @@ class Table
     }
 
     private function row(array $row) {
+        $amountColumns = count($row);
+        $count = 1;
     	$output = $this->_formatObject->rowOpen();
     	foreach ($row as $columns => $column) {
-    		$output .= $this->column($column);
+            $last = ($count == $amountColumns) ? TRUE : FALSE;
+    		$output .= $this->column($column, $last);
+            $count++;
     	}
     	$output .= $this->_formatObject->rowClose();
     	return $output;
     }
 
-    private function column($column) {
-    	$output = $this->_formatObject->columnOpen();
-    	$output .= $column;
-    	$output .= $this->_formatObject->columnClose();
+    private function column($column, $last=FALSE) {
+        if ($this->_formatObject->join()) {
+            $output = $column;
+            $output .= ($last) ? '' : $this->_formatObject->columnJoin();
+        } else {
+        	$output = $this->_formatObject->columnOpen();
+        	$output .= $column;
+        	$output .= $this->_formatObject->columnClose();
+        }
     	return $output;
     }
 }
