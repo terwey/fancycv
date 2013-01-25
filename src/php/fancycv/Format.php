@@ -20,7 +20,7 @@ class Format
     public function __construct($format) {
     	$this->_formatName = $format;
         if (!file_exists(FORMATTERS.$format.'.yml')) {
-            throw new Exception('Format: '. $format .'does not exist!');
+            throw new \Exception('Format: "'. $format .'" does not exist!');
         } else {
             $formatter = Yaml::parse(FORMATTERS.$format.'.yml');
             $this->_tableOpen = $formatter['tableOpen'];
