@@ -14,7 +14,8 @@
         "symfony/console": "2.2.x-dev",
         "symfony/yaml": "2.2.x-dev",
         "fancycv/oauth": "@dev",
-        "fancycv/simplelinkedin": "3.2.0"
+        "fancycv/simplelinkedin": "3.2.0",
+        "monolog/monolog": "1.3.1"
     },
     "autoload": {
         "psr-0": {

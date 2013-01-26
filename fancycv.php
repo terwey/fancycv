@@ -5,6 +5,7 @@ DEFINE('JSON_FILE', __DIR__.'/linkedin.json');
 DEFINE('FORMATTERS', __DIR__.'/src/yml/fancycv/formatters/');
 DEFINE('BASE_DIR', __DIR__);
 DEFINE('DATA_DIR', __DIR__.'/data/');
+DEFINE('LOG_DIR', __DIR__.'/logs/');
 require_once('vendor/autoload.php');
 use fancycv\InitCommand;
 use fancycv\AuthCommand;

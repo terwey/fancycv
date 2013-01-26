@@ -1,9 +1,0 @@
-web:
-  desc: 'Web development and such'
-mobile:
-  desc: 'Some mobile devving'
-sales:
-  desc: 'Sales blabla'
-support:
-  desc: 'Support blabla'
-  skills: [hacking]

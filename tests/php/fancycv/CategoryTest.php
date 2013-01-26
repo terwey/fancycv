@@ -24,16 +24,15 @@ class CategoryTest extends \PHPUnit_Framework_TestCase {
 	function testNewCategory() {
 		$name = 'support';
 		$desc = 'Support blabla';
-		$newCategory = $this->_categoriesObject->newCategory($name, $desc);
-		$this->assertEquals($name, $newCategory);
-		return $newCategory;
+		$this->assertTrue($this->_categoriesObject->newCategory($name, $desc));
+		return $name;
 	}
 
 	/**
 	 * @depends testNewCategory
 	 **/
-	function testListCategories($newCategory) {
-		$this->assertContains($newCategory, $this->_categoriesObject->listCategories());
+	function testListCategories($categoryName) {
+		$this->assertContains($categoryName, $this->_categoriesObject->listCategories());
 	}
 
 	/**
@@ -46,8 +45,32 @@ class CategoryTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @depends testNewCategory
 	 **/
-	function testAddSkillToCategory($newCategory) {
+	function testAddSkillToCategory($categoryName) {
 		$skill = 'hacking';
-		$this->assertTrue($this->_categoriesObject->addSkillToCategory($skill, $newCategory));
+		$skillDesc = 'Making it do more stuff then it\'s supposed to';
+		$this->assertTrue($this->_categoriesObject->addSkillToCategory($skill, $categoryName, $skillDesc));
+		$skill2 = 'calling';
+		$skillDesc2 = 'Lorem ipsum dolar amet';
+		$this->assertTrue($this->_categoriesObject->addSkillToCategory($skill2, $categoryName, $skillDesc2));
+		return $categoryName;
+	}
+
+	/**
+	 * @depends testAddSkillToCategory
+	 **/
+	function testDeleteSkillFromCategory($categoryName) {
+		$skill = 'hacking';
+		$skillDesc = 'Making it do more stuff then it\'s supposed to';
+		$this->assertTrue($this->_categoriesObject->deleteSkillFromCategory($skill, $categoryName));
+	}
+
+	/**
+	 * @depends testAddSkillToCategory
+	 **/
+	function testDeleteCategory($categoryName) {
+		// don't delete category if there are skills present
+		$this->assertFalse($this->_categoriesObject->deleteCategory($categoryName, FALSE));
+		// always delete category
+		$this->assertTrue($this->_categoriesObject->deleteCategory($categoryName, TRUE));
 	}
 }
