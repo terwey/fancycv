@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 class SkillsCommand extends Command
 {
     private $config;
+    private $_categoryObject;
     protected function configure()
     {
         $this
@@ -30,10 +31,11 @@ class SkillsCommand extends Command
             ->addOption(
                'new-category',
                null,
-               InputOption::VALUE_OPTIONAL,
+               InputOption::VALUE_REQUIRED,
                'Creates a new skills category'
             )
         ;
+        $this->_categoryObject = new Categories();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -45,54 +47,30 @@ class SkillsCommand extends Command
         } else {
             $dialog = $this->getHelperSet()->get('dialog');
             $decode = json_decode(file_get_contents(JSON_FILE), TRUE);
-            foreach ($decode['skills']['values'] as $key => $value) {
-                // print $value['skill']['name']."\n";
-            }
+            // foreach ($decode['skills']['values'] as $key => $value) {
+                // $this->_categoryObject->addSkillToCategory($value['skill']['name'], 'Unsorted');
+            // }
 
-            $category = $dialog->ask(
+            if ($input->getOption('new-category')) {
+              $categoryDesc = $dialog->ask(
                 $output,
-                '<question>Please enter the name of a new category:</question> ',
-                null
-            );
-
-            $output->writeln('New category name: '.$category);
-            $this->newCategory($category, $input, $output);
-            // $this->createDirectory('profiles', DATA_DIR.'profiles', $input, $output);            
-        }
-    }
-
-    protected function newCategory($categoryName, InputInterface $input, OutputInterface $output) {
-        $skillsFile = DATA_DIR.'skills.yml';
-        if (file_exists($skillsFile)) {
-            $skills = Yaml::parse($skillsFile);
-        } else {
-            $skills = array();
-        }
-
-        $skills[] = $categoryName;
-
-        $this->createFile(Yaml::dump($skills), 'skills.yml', $skillsFile, $input, $output);
-    }
-
-    protected function createDirectory($directoryName, $directoryPath, InputInterface $input, OutputInterface $output) {
-        if (!file_exists($directoryPath)) {
-            // attempt to create it
-            if (!mkdir($directoryPath)) {
-                $output->writeln('<error>The '.$directoryName.' dir does not exist and could not be created: '.$directoryPath.'</error>');
-                exit(0);
-            } else {
-                return true;
+                '<question>Please enter a Category description:</question> ',
+                NULL
+              );
+              if ($this->_categoryObject->newCategory($input->getOption('new-category'), $categoryDesc)) {
+                $output->writeln(sprintf('<info>New category created with name: "%s" and description: "%s"</info>', $input->getOption('new-category'), $categoryDesc));
+              }
             }
-        }
-    }
 
-    protected function createFile($fileContents, $fileName, $filePath, InputInterface $input, OutputInterface $output) {
-        if (file_put_contents($filePath, $fileContents)) {
-            $output->writeln('<info>File '.$fileName.' successfully written: '.$filePath.'</info>');
-            return true;
-        } else {
-            $output->writeln('<error>Could not write file: '.$filePath.'</error>');
-            return false;
+            // $category = $dialog->ask(
+            //     $output,
+            //     '<question>Please enter the name of a new category:</question> ',
+            //     null
+            // );
+
+            // $output->writeln('New category name: '.$category);
+            // $this->newCategory($category, $input, $output);
+            // $this->createDirectory('profiles', DATA_DIR.'profiles', $input, $output);            
         }
     }
 }

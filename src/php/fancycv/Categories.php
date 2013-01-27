@@ -36,7 +36,7 @@ class Categories
                                   array('filename'=>$this->_skillsFile));
         } else {
             $this->_log->addDebug('Saved.', 
-                                  array('filename'=>$this->_skillsFile));
+                                  array('filename'=>$this->_skillsFile, 'array'=>$this->_skills));
         }
         return $status;
     }
@@ -45,7 +45,8 @@ class Categories
      * @return BOOL Indicates success.
      **/
     public function newCategory($categoryName, $categoryDesc=NULL) {
-        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
+        print 'new Category: '.$categoryName."\n";
+        if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
     	if (!in_array($categoryName, $this->listCategories())) {
     		$this->_skills[$categoryName] = array('desc' => $categoryDesc, 
                                                   'skills' => array());
@@ -70,19 +71,27 @@ class Categories
     }
 
     /**
-     * @return array array of existing skills in category
+     * @return array array of existing skills in category or empty if the category doesn't exist
      **/
     public function listSkillsInCategory($categoryName) {
-        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
-        return array_keys($this->_skills[$categoryName]['skills']);
+        if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
+        if (isset($this->_skills[$categoryName])) {
+            return array_keys($this->_skills[$categoryName]['skills']);
+        } else {
+            return array();
+        }
     }
 
     /**
      * @return BOOL Indicates success.
      **/
     public function addSkillToCategory($skill, $categoryName, $skillDesc=NULL) {
-        if (empty($skill)) { throw new InvalidArgumentException('$skill cannot be empty'); }
-        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
+        print 'skill: '.$skill. ', category: '.$categoryName."\n";
+        if (empty($skill)) { throw new \InvalidArgumentException('$skill cannot be empty'); }
+        if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
+        if (!in_array($categoryName, $this->listCategories())) {
+            $this->newCategory($categoryName);
+        }
         if (!in_array($skill, $this->listSkillsInCategory($categoryName))) {
             $this->_skills[$categoryName]['skills'][$skill] = $skillDesc;
             if ($this->save()) {
@@ -104,8 +113,8 @@ class Categories
      * @return BOOL Indicates success.
      **/
     public function deleteSkillFromCategory($skill, $categoryName) {
-        if (empty($skill)) { throw new InvalidArgumentException('$skill cannot be empty'); }
-        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
+        if (empty($skill)) { throw new \InvalidArgumentException('$skill cannot be empty'); }
+        if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (in_array($skill, $this->listSkillsInCategory($categoryName))) {
             unset($this->_skills[$categoryName]['skills'][$skill]);
             if ($this->save()) {
@@ -126,7 +135,7 @@ class Categories
      * @return BOOL Indicates success.
      **/
     public function deleteCategory($categoryName, $force=FALSE) {
-        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
+        if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (count($this->_skills[$categoryName]['skills']) != 0 && $force === FALSE) {
             $this->_log->addWarning('Category ('.$categoryName.') has skills and force not set, not deleting.', 
                                     array('skills' => $this->_skills[$categoryName]));
@@ -154,9 +163,9 @@ class Categories
     }
 
     public function moveSkillToCategory($skillName, $currentCategory, $targetCategory) {
-        if (empty($skillName)) { throw new InvalidArgumentException('$skillName cannot be empty'); }
-        if (empty($currentCategory)) { throw new InvalidArgumentException('$currentCategory cannot be empty'); }
-        if (empty($targetCategory)) { throw new InvalidArgumentException('$targetCategory cannot be empty'); }
+        if (empty($skillName)) { throw new \InvalidArgumentException('$skillName cannot be empty'); }
+        if (empty($currentCategory)) { throw new \InvalidArgumentException('$currentCategory cannot be empty'); }
+        if (empty($targetCategory)) { throw new \InvalidArgumentException('$targetCategory cannot be empty'); }
 
         if (in_array($currentCategory, $this->listCategories())) {
             if (in_array($targetCategory, $this->listCategories())) {

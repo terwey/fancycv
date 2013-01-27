@@ -31,6 +31,6 @@ class OutputTest extends \PHPUnit_Framework_TestCase {
 		);
 		$table = new Table($this->_formatObject, $tableContents);
 		$this->assertInstanceOf('fancycv\Table', $table);
-		print $table->table();
+		$this->assertStringStartsWith('\begin{tabularx}', $table->table());
 	}
 }
