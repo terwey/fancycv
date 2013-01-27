@@ -41,9 +41,11 @@ class Categories
         return $status;
     }
 
+    /**
+     * @return BOOL Indicates success.
+     **/
     public function newCategory($categoryName, $categoryDesc=NULL) {
-        print 'existing categories: ';
-        var_dump($this->listCategories());
+        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
     	if (!in_array($categoryName, $this->listCategories())) {
     		$this->_skills[$categoryName] = array('desc' => $categoryDesc, 
                                                   'skills' => array());
@@ -60,15 +62,27 @@ class Categories
         }
     }
 
+    /**
+     * @return array array of existing categories
+     **/
     public function listCategories() {
     	return array_keys($this->_skills);
     }
 
+    /**
+     * @return array array of existing skills in category
+     **/
     public function listSkillsInCategory($categoryName) {
+        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
         return array_keys($this->_skills[$categoryName]['skills']);
     }
 
+    /**
+     * @return BOOL Indicates success.
+     **/
     public function addSkillToCategory($skill, $categoryName, $skillDesc=NULL) {
+        if (empty($skill)) { throw new InvalidArgumentException('$skill cannot be empty'); }
+        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
         if (!in_array($skill, $this->listSkillsInCategory($categoryName))) {
             $this->_skills[$categoryName]['skills'][$skill] = $skillDesc;
             if ($this->save()) {
@@ -86,7 +100,12 @@ class Categories
         }
     }
 
+    /**
+     * @return BOOL Indicates success.
+     **/
     public function deleteSkillFromCategory($skill, $categoryName) {
+        if (empty($skill)) { throw new InvalidArgumentException('$skill cannot be empty'); }
+        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
         if (in_array($skill, $this->listSkillsInCategory($categoryName))) {
             unset($this->_skills[$categoryName]['skills'][$skill]);
             if ($this->save()) {
@@ -103,7 +122,11 @@ class Categories
         }
     }
 
+    /**
+     * @return BOOL Indicates success.
+     **/
     public function deleteCategory($categoryName, $force=FALSE) {
+        if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
         if (count($this->_skills[$categoryName]['skills']) != 0 && $force === FALSE) {
             print "stap1";
             $this->_log->addWarning('Category ('.$categoryName.') has skills and force not set, not deleting.', 
@@ -136,6 +159,38 @@ class Categories
                                       array('skills' => $this->_skills[$categoryName]));
                 return false;
             }
+        }
+    }
+
+    public function moveSkillToCategory($skillName, $currentCategory, $targetCategory) {
+        if (empty($skillName)) { throw new InvalidArgumentException('$skillName cannot be empty'); }
+        if (empty($currentCategory)) { throw new InvalidArgumentException('$currentCategory cannot be empty'); }
+        if (empty($targetCategory)) { throw new InvalidArgumentException('$targetCategory cannot be empty'); }
+
+        if (in_array($currentCategory, $this->listCategories())) {
+            if (in_array($targetCategory, $this->listCategories())) {
+                if (in_array($skillName, $this->listSkillsInCategory($currentCategory))) {
+                    $skillDesc = $this->_skills[$currentCategory]['skills'][$skillName];
+                    
+                    if ($this->addSkillToCategory($skillName, $targetCategory, $skillDesc) 
+                        && $this->deleteSkillFromCategory($skillName, $currentCategory)) {
+                        $this->_log->addDebug('Skill ('.$skillName.') move to Category ('.$targetCategory.') succeeded. Saved');
+                        return true;
+                    } else {
+                        $this->_log->addError('Skill ('.$skillName.') move to Category ('.$targetCategory.') succeeded. Failed to save');
+                        return false;
+                    }
+                } else {
+                    $this->_log->addError('Skill ('.$skillName.') does not exist in Category ('.$currentCategory.').');
+                    return false;
+                }
+            } else {
+                $this->_log->addError('Category ('.$targetCategory.') target does not exist.');
+                return false;
+            }
+        } else {
+            $this->_log->addError('Category ('.$currentCategory.') does not exist.');
+            return false;
         }
     }
 }
