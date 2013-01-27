@@ -17,12 +17,6 @@ class SkillsCommand extends Command
             ->setName('skills')
             ->setDescription('Process your skills')
             ->addOption(
-               'new-profile',
-               null,
-               InputOption::VALUE_OPTIONAL,
-               'Creates a new skills profile'
-            )
-            ->addOption(
                'list-categories',
                null,
                InputOption::VALUE_NONE,
@@ -33,6 +27,12 @@ class SkillsCommand extends Command
                null,
                InputOption::VALUE_REQUIRED,
                'Creates a new skills category'
+            )
+            ->addOption(
+               'process-linkedin-skills',
+               'pLs',
+               InputOption::VALUE_NONE,
+               'Process LinkedIn Skills'
             )
         ;
         $this->_categoryObject = new Categories();
@@ -51,15 +51,41 @@ class SkillsCommand extends Command
                 // $this->_categoryObject->addSkillToCategory($value['skill']['name'], 'Unsorted');
             // }
 
-            if ($input->getOption('new-category')) {
-              $categoryDesc = $dialog->ask(
-                $output,
-                '<question>Please enter a Category description:</question> ',
-                NULL
-              );
-              if ($this->_categoryObject->newCategory($input->getOption('new-category'), $categoryDesc)) {
-                $output->writeln(sprintf('<info>New category created with name: "%s" and description: "%s"</info>', $input->getOption('new-category'), $categoryDesc));
+            if ($input->getOption('process-linkedin-skills')) {
+              $count = 0;
+              $output->writeln("<info>Type LIST for a list of available Categories.\nType NEW to add a new Category.</info>\n");
+              foreach ($decode['skills']['values'] as $key => $value) {
+                $question = sprintf("<question>Skill:</question><comment> %s </comment><question>found, to which Category number do you want to add this?</question>: ", $value['skill']['name']);
+                // ask the question where it goes
+                $targetCategoryNumber = $this->skillFound($question, $input, $output);
+
+                if ($targetCategoryNumber == 'LIST') {
+                  $this->listCategories($input, $output);
+                  // ask the question again
+                  $targetCategoryNumber = $this->skillFound($question, $input, $output);
+                }
+                if ($targetCategoryNumber == 'NEW') {
+                  $targetCategoryName = $this->getHelperSet()->get('dialog')->ask(
+                    $output,
+                    '<question>New category name</question>: ',
+                    false
+                  );
+                  $this->createNewCategory($targetCategoryName, $input, $output);
+                  $targetCategoryNumber = array_search($targetCategoryName, $this->_categoryObject->listCategories());
+                }
+                if (is_numeric($targetCategoryNumber)) {
+                  $targetCategoryName = $this->_categoryObject->listCategories()[$targetCategoryNumber];
+                  $this->addSkillToCategory(array('name' => $value['skill']['name'], 'desc' =>NULL), $targetCategoryName, $input, $output);
+                }
               }
+            }
+
+            if ($input->getOption('new-category')) {
+              $this->createNewCategory($input->getOption('new-category'), $input, $output);
+            }
+
+            if ($input->getOption('list-categories')) {
+              $this->listCategories($input, $output);
             }
 
             // $category = $dialog->ask(
@@ -72,6 +98,52 @@ class SkillsCommand extends Command
             // $this->newCategory($category, $input, $output);
             // $this->createDirectory('profiles', DATA_DIR.'profiles', $input, $output);            
         }
+    }
+
+    function createNewCategory($categoryName, InputInterface $input, OutputInterface $output) {
+      $categoryDesc = $this->getHelperSet()->get('dialog')->ask(
+        $output,
+        '<question>Please enter a Category description:</question> ',
+        NULL
+      );
+      if ($this->_categoryObject->newCategory($categoryName, $categoryDesc)) {
+        $output->writeln(sprintf('<info>New category created with name: "%s" and description: "%s"</info>', $categoryName, $categoryDesc));
+      }
+    }
+
+    function listCategories(InputInterface $input, OutputInterface $output) {
+      $count = 0;
+      $categoriesList = '';
+      foreach ($this->_categoryObject->listCategories() as $key) {
+        $categoriesList .= $count.': '.$key."\n";
+        $count++;
+      }
+      $output->writeln(sprintf("<info>Available categories: \n%s</info>", $categoriesList));
+    }
+
+    function addSkillToCategory(array $skill, $categoryName, InputInterface $input, OutputInterface $output) {
+      if ($this->_categoryObject->addSkillToCategory($skill['name'], $categoryName, $skill['desc'])) {
+        $output->writeln(sprintf("Skill: <comment>%s</comment> added to Category: <comment>%s</comment>.\n", $skill['name'], $categoryName));
+      } else {
+        $output->writeln(sprintf("<error>Failed to add Skill: <comment>%s</comment> to Category: <comment>%s</comment>.</error>\n\n", $skill['name'], $categoryName));
+      }
+    }
+
+    function skillFound($question, InputInterface $input, OutputInterface $output) {
+      $targetCategoryNumber = $this->getHelperSet()->get('dialog')->askAndValidate(
+        $output,
+        $question,
+        function ($targetCategoryNumber) {
+          if (is_numeric($targetCategoryNumber)) {
+            return $targetCategoryNumber;
+          } else if ($targetCategoryNumber == 'LIST' || $targetCategoryNumber == 'NEW') {
+            return $targetCategoryNumber;
+          } else {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid option.', $targetCategoryNumber));
+          }
+        }
+      );
+      return $targetCategoryNumber;
     }
 }
 

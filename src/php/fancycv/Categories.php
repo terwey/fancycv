@@ -67,7 +67,11 @@ class Categories
      * @return array array of existing categories
      **/
     public function listCategories() {
-    	return array_keys($this->_skills);
+        if (is_array($this->_skills)) {
+    	   return array_keys($this->_skills);
+        } else {
+            return array();
+        }
     }
 
     /**
@@ -86,7 +90,6 @@ class Categories
      * @return BOOL Indicates success.
      **/
     public function addSkillToCategory($skill, $categoryName, $skillDesc=NULL) {
-        print 'skill: '.$skill. ', category: '.$categoryName."\n";
         if (empty($skill)) { throw new \InvalidArgumentException('$skill cannot be empty'); }
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (!in_array($categoryName, $this->listCategories())) {
