@@ -72,7 +72,7 @@ class CategoryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->_categoriesObject->deleteCategory($categoryName, FALSE));
 		// always delete category
 		// FOR SOME REASON THIS IS BROKEN ATM
-		// $this->assertTrue($this->_categoriesObject->deleteCategory($categoryName, TRUE));
+		$this->assertTrue($this->_categoriesObject->deleteCategory($categoryName, TRUE));
 	}
 
 	function testMoveSkill() {

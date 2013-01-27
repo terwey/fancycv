@@ -128,28 +128,19 @@ class Categories
     public function deleteCategory($categoryName, $force=FALSE) {
         if (empty($categoryName)) { throw new InvalidArgumentException('$categoryName cannot be empty'); }
         if (count($this->_skills[$categoryName]['skills']) != 0 && $force === FALSE) {
-            print "stap1";
             $this->_log->addWarning('Category ('.$categoryName.') has skills and force not set, not deleting.', 
                                     array('skills' => $this->_skills[$categoryName]));
             return false;
         } else if ($force === TRUE) {
-            print "stap2";
-            var_dump($this->_skills[$categoryName]);
-            var_dump($this->_skills);
-            print $categoryName;
-            print isset($this->_skills[$categoryName]);
             unset($this->_skills[$categoryName]);
             if ($this->save()) {
-                $this->_log->addDebug('Category ('.$categoryName.') has skills but force is set, deleted.', 
-                                    array('skills' => $this->_skills[$categoryName]));
+                $this->_log->addDebug('Category ('.$categoryName.') has skills but force is set, deleted.');
                 return true;
             } else {
-                $this->_log->addError('Category ('.$categoryName.') has skills but force is set, deleted. Could not save.', 
-                                      array('skills' => $this->_skills[$categoryName]));
+                $this->_log->addError('Category ('.$categoryName.') has skills but force is set, deleted. Could not save.');
                 return false;
             }
         } else if (count($this->_skills[$categoryName]['skills']) == 0) {
-            print "stap3";
             unset($this->_skills[$categoryName]);
             if ($this->save()) {
                 $this->_log->addDebug('Category ('.$categoryName.') has no skills, deleted.');
