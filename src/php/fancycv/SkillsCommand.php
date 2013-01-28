@@ -55,7 +55,7 @@ class SkillsCommand extends Command
               $count = 0;
               $output->writeln("<info>Type LIST for a list of available Categories.\nType NEW to add a new Category.</info>\n");
               foreach ($decode['skills']['values'] as $key => $value) {
-                $question = sprintf("<question>Skill:</question><comment> %s </comment><question>found, to which Category number do you want to add this?</question>: ", $value['skill']['name']);
+                $question = sprintf("<question>Skill:<comment> %s </comment>found, to which Category number do you want to add this?</question>: ", $value['skill']['name']);
                 // ask the question where it goes
                 $targetCategoryNumber = $this->skillFound($question, $input, $output);
 
