@@ -99,9 +99,16 @@ class Positions
      }
 
     /**
+     * @param string $typeName
+     * @param string $periodFrom UNIX timestamp
+     * @param string $periodTo UNIX timestamp
+     * @param string $employer
+     * @param string $title
+     * @param string $summary
+     * @param array  $skills
      * @return BOOL Indicates success.
      **/
-    public function addPositionToType($typeName, $periodFrom, $periodTo, $employer, $title, $summary, $skills=array()) {
+    public function addPositionToType($typeName, $periodFrom, $periodTo, $employer, $title, $summary, $url=null, $skills=array()) {
         if (empty($typeName)) { throw new \InvalidArgumentException('$typeName cannot be empty'); }
         if (empty($periodFrom)) { throw new \InvalidArgumentException('$periodFrom cannot be empty'); }
         if (empty($periodTo)) { throw new \InvalidArgumentException('$periodTo cannot be empty'); }
@@ -142,7 +149,20 @@ class Positions
     public function addPositionToTypeWithArray($typeName, $positionArray) {
         if (empty($typeName)) { throw new \InvalidArgumentException('$typeName cannot be empty'); }
         if (!is_array($positionArray)) { throw new \InvalidArgumentException('$positionArray has to be an array'); }
+        if (!isset($positionArray['skills']) || !is_array($positionArray['skills'])) { $positionArray['skills'] = array();}
         return $this->addPositionToType($typeName, $positionArray['periodFrom'], $positionArray['periodTo'], $positionArray['employer'], $positionArray['title'], $positionArray['summary'], $positionArray['skills']);
+    }
+
+    /**
+     * @return array specified position array
+     **/
+    public function getPosition($employer) {
+        $currentPositions = $this->listPositions();
+        $employers = array_keys($currentPositions);
+        if (in_array($employer, $employers)) {
+            $type = $currentPositions[$employers[array_search($employer, $employers)]][0];
+            return $this->_positions[$type]['Positions'][$employer];
+        }
     }
 
     /**

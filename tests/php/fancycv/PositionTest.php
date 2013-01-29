@@ -91,11 +91,17 @@ class PositionTest extends \PHPUnit_Framework_TestCase {
 		return $employer;
 	}
 
+	
+	/**
+	 * @depends testMovePosition
+	 **/
+	function testGetPosition($employer) {
+		$this->assertContains($employer, $this->_positionsObject->getPosition($employer));
+	}	
 	/**
 	 * @depends testMovePosition
 	 **/
 	function testAddSkillToPosition($employer) {
-		print $employer;
 		$skill = array('Hacking' => 'Poking stuff');
 		$this->assertTrue($this->_positionsObject->addSkillToPosition($employer, $skill));
 		return $employer;
