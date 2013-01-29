@@ -12,6 +12,7 @@ use fancycv\AuthCommand;
 use fancycv\FetchCommand;
 use fancycv\GenerateCommand;
 use fancycv\SkillsCommand;
+use fancycv\PositionsCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
@@ -19,6 +20,7 @@ $application->add(new InitCommand);
 $application->add(new AuthCommand);
 $application->add(new FetchCommand);
 $application->add(new SkillsCommand);
+$application->add(new PositionsCommand);
 $application->add(new GenerateCommand);
 $application->run();
 ?>
