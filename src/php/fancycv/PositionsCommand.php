@@ -122,10 +122,31 @@ class PositionsCommand extends Command
         $output->writeln("<info>Type <comment>LIST</comment> for a list of available Types.\nType <comment>NEW</comment> to add a new Type.</info>\n");
         $decode = json_decode(file_get_contents(JSON_FILE), TRUE);
 
-        var_dump($decode['positions']);
-        foreach ($decode['positions']['values'] as $key => $value) {
-          $question = sprintf("<question>Position:<comment> %s </comment>found, enter Type number</question>: ", $value['position']['name']);
-          $this->newPosition($input, $output, $question, $value['position']['name']);
+        // var_dump($decode['positions']['values']);
+        foreach ($decode['positions']['values'] as $position) {
+          $positionArray = array();
+          foreach ($position as $key => $value) {
+            if ($key == 'company') {
+              $positionArray['employer'] = $value['name'];
+            }
+            if ($key == 'startDate') {
+              $positionArray['periodFrom'] = mktime(0,0,0,$value['month'],0,$value['year']);
+            }
+            if ($key == 'endDate') {
+              $positionArray['periodTo'] = mktime(0,0,0,$value['month'],0,$value['year']);
+            }
+            if ($key == 'isCurrent') {
+              $positionArray['periodTo'] = 'PRESENT';
+            }
+            if ($key == 'summary') {
+              $positionArray['summary'] = $value;
+            }
+            if ($key == 'title') {
+              $positionArray['title'] = $value;
+            }
+          }
+          $question = sprintf("<question>Position:<comment> %s </comment>found, enter Type number</question>: ", $positionArray['employer']);
+          $this->newPosition($input, $output, $question, $positionArray);
         }
         $this->_config['linkedinPositionsProcessed'] = TRUE;
         $fileSaved = file_put_contents(CONFIG_FILE, Yaml::dump($this->_config));
