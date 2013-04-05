@@ -9,7 +9,8 @@ class Categories
     private $_log;
     private $_skills;
     private $_skillsFile;
-    public function __construct() {
+    public function __construct()
+    {
         $this->_log = new Logger('Categories');
         $this->_log->pushHandler(new StreamHandler(LOG_DIR.'categories.log'), 
                                  Logger::WARNING);
@@ -27,7 +28,8 @@ class Categories
         }
     }
 
-    public function save() {
+    public function save()
+    {
         $status = Helpers::createFile(Yaml::dump($this->_skills, 3),     // 2nd option in the Yaml::dump
                                       'skills.yml',                      // defines the inline switch, 
                                       $this->_skillsFile);               // 3 keeps it tidy
@@ -44,7 +46,10 @@ class Categories
     /**
      * @return BOOL Indicates success.
      **/
-    public function newCategory($categoryName, $categoryDesc=NULL) {
+    public function newCategory(
+        $categoryName,
+        $categoryDesc=NULL
+    ) {
         print 'new Category: '.$categoryName."\n";
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (!in_array($categoryName, $this->listCategories())) {
@@ -66,7 +71,8 @@ class Categories
     /**
      * @return array array of existing categories
      **/
-    public function listCategories() {
+    public function listCategories()
+    {
         if (is_array($this->_skills)) {
            return array_keys($this->_skills);
         } else {
@@ -77,7 +83,8 @@ class Categories
     /**
      * @return array array of existing skills in category
      **/
-    public function listSkillsInCategory($categoryName) {
+    public function listSkillsInCategory($categoryName)
+    {
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (isset($this->_skills[$categoryName])) {
             return array_keys($this->_skills[$categoryName]['skills']);
@@ -89,7 +96,11 @@ class Categories
     /**
      * @return BOOL Indicates success.
      **/
-    public function addSkillToCategory($skill, $categoryName, $skillDesc=NULL) {
+    public function addSkillToCategory(
+        $skill,
+        $categoryName,
+        $skillDesc=NULL
+    ) {
         if (empty($skill)) { throw new \InvalidArgumentException('$skill cannot be empty'); }
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (!in_array($categoryName, $this->listCategories())) {
@@ -115,7 +126,10 @@ class Categories
     /**
      * @return BOOL Indicates success.
      **/
-    public function deleteSkillFromCategory($skill, $categoryName) {
+    public function deleteSkillFromCategory(
+        $skill,
+        $categoryName
+    ) {
         if (empty($skill)) { throw new \InvalidArgumentException('$skill cannot be empty'); }
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (in_array($skill, $this->listSkillsInCategory($categoryName))) {
@@ -137,7 +151,10 @@ class Categories
     /**
      * @return BOOL Indicates success.
      **/
-    public function deleteCategory($categoryName, $force=FALSE) {
+    public function deleteCategory(
+        $categoryName,
+        $force=FALSE
+    ) {
         if (empty($categoryName)) { throw new \InvalidArgumentException('$categoryName cannot be empty'); }
         if (count($this->_skills[$categoryName]['skills']) != 0 && $force === FALSE) {
             $this->_log->addWarning(__FUNCTION__.': Category ('.$categoryName.') has skills and force not set, not deleting.', 
@@ -165,7 +182,11 @@ class Categories
         }
     }
 
-    public function moveSkillToCategory($skillName, $currentCategory, $targetCategory) {
+    public function moveSkillToCategory(
+        $skillName,
+        $currentCategory,
+        $targetCategory
+    ) {
         if (empty($skillName)) { throw new \InvalidArgumentException('$skillName cannot be empty'); }
         if (empty($currentCategory)) { throw new \InvalidArgumentException('$currentCategory cannot be empty'); }
         if (empty($targetCategory)) { throw new \InvalidArgumentException('$targetCategory cannot be empty'); }
